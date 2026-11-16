@@ -9,6 +9,7 @@ Three callers use it, and they must behave identically:
 Stdlib only: the gateway plugin imports this alongside Hermes, the call scripts
 import it without Hermes at all.
 """
+import hashlib
 import json
 import os
 import pathlib
@@ -291,16 +292,29 @@ def ensure_dirs() -> None:
             pass
 
 
+# A request id becomes a file name, so it must never be a path. An id that does not look like an
+# id is hashed rather than rejected: a legitimate but unusual id still works, and `../` cannot
+# walk out of the approval folder.
+_ID_SAFE = re.compile(r'^[A-Za-z0-9._-]{1,64}$')
+
+
+def _safe_id(rid: str) -> str:
+    rid = str(rid or '')
+    if _ID_SAFE.match(rid) and rid not in ('.', '..'):
+        return rid
+    return 'x' + hashlib.sha256(rid.encode('utf-8', 'replace')).hexdigest()[:32]
+
+
 def ask_path(rid: str) -> pathlib.Path:
-    return ASK_DIR / f'{rid}.json'
+    return ASK_DIR / f'{_safe_id(rid)}.json'
 
 
 def result_path(rid: str) -> pathlib.Path:
-    return RESULT_DIR / f'{rid}.json'
+    return RESULT_DIR / f'{_safe_id(rid)}.json'
 
 
 def cancel_path(rid: str) -> pathlib.Path:
-    return CANCEL_DIR / f'{rid}.json'
+    return CANCEL_DIR / f'{_safe_id(rid)}.json'
 
 
 def write_json(path: pathlib.Path, data: dict) -> None:

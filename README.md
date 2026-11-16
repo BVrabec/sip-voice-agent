@@ -240,6 +240,9 @@ Two notes from doing this for real:
 - The engine makes outbound connections only: to the SIP provider, to your speech provider, and to
   your LLM. Nothing needs to reach it, and no port is opened on the machine.
 - Give the speech provider its own key with a spend limit. A call is cheap but a broken loop is not.
+- A request id becomes a **file name** inside the approval folder, so an id that does not look like
+  one is hashed rather than used as given: `../` in an id cannot walk out of that folder, and the
+  folder itself is created `0700`.
 
 ## Troubleshooting the things that actually go wrong
 
