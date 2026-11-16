@@ -71,6 +71,7 @@ split is the point: the engine is generic, the reasons to call are personal.
 - A **SIP account** and the number you want it to ring (any provider: Linphone, a PBX, an Asterisk
   of your own, a carrier's SIP trunk).
 - **baresip 4.x built from source** (see below — the distribution package will not register).
+- **`ffmpeg`** on the PATH: every speech clip is converted and level-matched with it.
 - Python 3.9+ with `baresipy` and `requests`.
 - An **OpenRouter** key for speech-to-text and text-to-speech.
 - Any **OpenAI-compatible chat endpoint** for the replies — a Hermes agent, OpenAI, OpenRouter,
@@ -85,7 +86,7 @@ while most providers offer SHA-256 first. Registration then dies with
 `Register: Function not implemented`, and no package upgrade fixes it.
 
 ```bash
-apt install -y cmake pkg-config build-essential libssl-dev libsndfile1-dev libopus-dev zlib1g-dev
+apt install -y cmake pkg-config build-essential libssl-dev libsndfile1-dev libopus-dev zlib1g-dev ffmpeg
 git ls-remote --tags --refs https://github.com/baresip/re       # pick the latest release tag
 git ls-remote --tags --refs https://github.com/baresip/baresip
 ```
