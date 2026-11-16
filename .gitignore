@@ -1,0 +1,8 @@
+# Settings, credentials and everything a call produces.
+config.env
+*.env
+!config.example.env
+clips/
+*.log
+__pycache__/
+*.pyc
